@@ -32,7 +32,7 @@ logger.addHandler(fh)
 try:
 
     # Conenct to database
-    engine = create_engine(Config.DATABASE_URL, echo=True)
+    engine = create_engine(Config.AWS_DATABASE_URL, echo=True)
     Base = declarative_base()
 
 
