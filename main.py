@@ -9,7 +9,7 @@ from scripts.fact_monthly_budget import fact_monthly_budget_load
 from scripts.fact_transaction import fact_transaction_load
 
 
-def main():
+def main(request):
 
     dim_account_load()
     dim_category_load()
