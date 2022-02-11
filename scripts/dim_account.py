@@ -9,30 +9,38 @@ from sqlalchemy.orm import sessionmaker, relationship
 from datetime import date
 
 
-from models import Account, AccountSnap, Day
-from config import Config
+from scripts.models import Account, AccountSnap, Day
+from scripts.config import Config
 
+
+# BELOW LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
 
 # Create a logging instance
-logger = logging.getLogger('sqlalchemy')
-logger.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
+# logger = logging.getLogger('sqlalchemy')
+# logger.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
 
-# Assign a file-handler to that instance
-fh = logging.FileHandler(Config.ERROR_LOGGING_FILE)
-fh.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
+# # Assign a file-handler to that instance
+# fh = logging.FileHandler(Config.ERROR_LOGGING_FILE)
+# fh.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
 
-# Format logs (optional)
-formatter = logging.Formatter('\n %(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter) # This will set the format to the file handler
+# # Format logs (optional)
+# formatter = logging.Formatter('\n %(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# fh.setFormatter(formatter) # This will set the format to the file handler
 
-# Add the handler to logging instance
-logger.addHandler(fh)
+# # Add the handler to logging instance
+# logger.addHandler(fh)
 
 
-try:
+# try:
+
+# ABOVE LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
+
+def dim_account_load():
+
+    counter = 0
 
     # Conenct to database
-    engine = create_engine(Config.AWS_DATABASE_URL, echo=True)
+    engine = create_engine(Config.DATABASE_URL, echo=True)
     Base = declarative_base()
 
 
@@ -125,7 +133,15 @@ try:
 
         session.commit()
 
+        counter += 1
 
-except:
-    logger.exception('DIM_ACCOUNT LOAD')
-    raise
+    return f"{counter} rows inserted successfully to DIM_ACCOUNT and DIM_ACCOUNT_SNAP"
+
+
+# BELOW LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
+
+# except:
+#     logger.exception('DIM_ACCOUNT LOAD')
+#     raise
+
+# ABOVE LOGGING CODE USED FOR LOCAL TROUBLESHOOTING

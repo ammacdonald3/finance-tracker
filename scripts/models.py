@@ -3,8 +3,8 @@ import sqlalchemy
 from sqlalchemy import Column, Integer, String, Numeric, Table, ForeignKey, Date
 from sqlalchemy.orm import relationship
 
-from config import Config
-from database import Base
+from scripts.config import Config
+from scripts.database import Base
 
 
 class Month(Base):

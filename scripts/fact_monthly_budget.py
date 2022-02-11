@@ -8,30 +8,38 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from datetime import date
 
-from models import MonthlyBudget, MonthlyBudgetSnap, Category, CategorySnap, Month, Day
-from config import Config
+from scripts.models import MonthlyBudget, MonthlyBudgetSnap, Category, CategorySnap, Month, Day
+from scripts.config import Config
 
+
+# BELOW LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
 
 # Create a logging instance
-logger = logging.getLogger('sqlalchemy')
-logger.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
+# logger = logging.getLogger('sqlalchemy')
+# logger.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
 
-# Assign a file-handler to that instance
-fh = logging.FileHandler(Config.ERROR_LOGGING_FILE)
-fh.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
+# # Assign a file-handler to that instance
+# fh = logging.FileHandler(Config.ERROR_LOGGING_FILE)
+# fh.setLevel(logging.ERROR) # this can be set to DEBUG, INFO, ERROR
 
-# Format logs (optional)
-formatter = logging.Formatter('\n %(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter) # This will set the format to the file handler
+# # Format logs (optional)
+# formatter = logging.Formatter('\n %(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# fh.setFormatter(formatter) # This will set the format to the file handler
 
-# Add the handler to logging instance
-logger.addHandler(fh)
+# # Add the handler to logging instance
+# logger.addHandler(fh)
 
 
-try:
+# try:
+
+# ABOVE LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
+
+def fact_monthly_budget_load():
+
+    counter = 0
 
     # Conenct to database
-    engine = create_engine(Config.AWS_DATABASE_URL, echo=True)
+    engine = create_engine(Config.DATABASE_URL, echo=True)
     Base = declarative_base()
 
 
@@ -124,6 +132,16 @@ try:
 
             session.commit()
 
-except:
-    logger.exception('FACT_MONTHLY_BUDGET LOAD')
-    raise
+            counter += 1
+
+
+    return f"{counter} rows inserted successfully to FACT_MONTHLY_BUDGET and FACT_MONTHLY_BUDGET_SNAP"
+
+
+# BELOW LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
+
+# except:
+#     logger.exception('FACT_MONTHLY_BUDGET LOAD')
+#     raise
+
+# ABOVE LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
