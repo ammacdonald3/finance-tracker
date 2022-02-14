@@ -8,8 +8,8 @@ from sqlalchemy.orm import sessionmaker, relationship
 
 
 
-from models import MonthlyBudget, CategoryGoal, Transaction
-from config import Config
+from scripts.models import MonthlyBudget, CategoryGoal, Transaction
+from scripts.config import Config
 
 
 # BELOW LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
