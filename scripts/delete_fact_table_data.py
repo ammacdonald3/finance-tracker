@@ -52,7 +52,7 @@ def delete_fact_table_data():
     session.query(Transaction).delete()
     session.commit()
 
-return "Data deleted successfully from all fact tables"
+    return "Data deleted successfully from all fact tables"
 
 # BELOW LOGGING CODE USED FOR LOCAL TROUBLESHOOTING
 
