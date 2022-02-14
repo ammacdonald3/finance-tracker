@@ -1,7 +1,8 @@
 import sqlalchemy
 
-from sqlalchemy import Column, Integer, String, Numeric, Table, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, Numeric, Table, ForeignKey, Date, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from scripts.config import Config
 from scripts.database import Base
@@ -17,10 +18,12 @@ class Month(Base):
     year_name = Column(Integer)
     year_month_id = Column(String)
     year_month_name = Column(String)
+    month_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     month_day = relationship('Day', backref='month')
     month_budget = relationship('MonthlyBudget', backref='month')
     month_budget_snap = relationship('MonthlyBudgetSnap', backref='month')
+
     #month_goal_creation = relationship('CategoryGoal', backref='month')
     #month_goal_creation_snap = relationship('CategoryGoalSnap', backref='month')
     #month_goal_target = relationship('CategoryGoal', backref='month')
@@ -48,6 +51,7 @@ class Day(Base):
     year_name = Column(Integer)
     year_month_name = Column(String)
     year_month_day_name = Column(String)
+    day_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     day_transaction = relationship('Transaction', backref='day')
     #day_transaction_snap = relationship('TransactionSnap', backref='day')
@@ -80,6 +84,7 @@ class Account(Base):
     account_cleared_balance = Column(Numeric)
     account_uncleared_balance = Column(Numeric)
     account_deletion_status = Column(String)
+    account_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     account_transaction = relationship('Transaction', backref='account')
 
@@ -100,6 +105,7 @@ class Category(Base):
     category_group_name = Column(String)
     category_group_visibility_status = Column(String)
     category_group_deletion_status = Column(String)
+    category_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     monthly_budget_category = relationship('MonthlyBudget', backref='category')
     category_transaction = relationship('Transaction', backref = 'category')
@@ -116,6 +122,7 @@ class Payee(Base):
     payee_id = Column(String)
     payee_name = Column(String)
     payee_deletion_status = Column(String)
+    payee_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     payee_transaction = relationship('Transaction', backref='payee')
     
@@ -129,6 +136,7 @@ class GoalType(Base):
     goal_type_key = Column(Integer, primary_key=True)
     goal_type_code = Column(String)
     goal_type_name = Column(String)
+    goal_type_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     goaltype_goal = relationship('CategoryGoal', backref = 'goaltype')
 
@@ -145,6 +153,7 @@ class MonthlyBudget(Base):
     budgeted_amount = Column(Numeric)
     activity_amount = Column(Numeric)
     balance_amount = Column(Numeric)
+    monthly_budget_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
         return "<(monthly_budget='%s')" % (self.monthly_budget_key)
@@ -160,6 +169,7 @@ class Transaction(Base):
     category_key = Column(Integer, ForeignKey('dim_category.category_key'))
     date_key = Column(Integer, ForeignKey('dim_date.date_key'))
     transaction_amount = Column(Numeric)
+    transaction_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
         return "<(transaction='%s')" % (self.transaction_id)
@@ -175,6 +185,7 @@ class CategoryGoal(Base):
     goal_type_key = Column(Integer, ForeignKey('dim_goal_type.goal_type_key'))
     goal_target_amount = Column(Numeric)
     goal_percentage_complete = Column(Numeric)
+    category_goal_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     goal_creation_month = relationship("Month", foreign_keys=[goal_creation_month_key])
     goal_target_month = relationship("Month", foreign_keys=[goal_target_month_key])
@@ -198,6 +209,7 @@ class AccountSnap(Base):
     account_cleared_balance = Column(Numeric)
     account_uncleared_balance = Column(Numeric)
     account_deletion_status = Column(String)
+    account_snap_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     account_transaction_snap = relationship('TransactionSnap', backref='account_snap')
 
@@ -219,6 +231,7 @@ class CategorySnap(Base):
     category_group_name = Column(String)
     category_group_visibility_status = Column(String)
     category_group_deletion_status = Column(String)
+    category_snap_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     monthly_budget_category_snap = relationship('MonthlyBudgetSnap', backref='category_snap')
     category_transaction_snap = relationship('TransactionSnap', backref = 'category_snap')
@@ -236,6 +249,8 @@ class PayeeSnap(Base):
     payee_id = Column(String)
     payee_name = Column(String)
     payee_deletion_status = Column(String)
+    payee_snap_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
+
     payee_transaction = relationship('TransactionSnap', backref='payee_snap')
     
     def __repr__(self):
@@ -249,6 +264,7 @@ class GoalTypeSnap(Base):
     goal_type_snap_key = Column(Integer, primary_key=True)
     goal_type_code = Column(String)
     goal_type_name = Column(String)
+    goal_type_snap_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     goaltype_snap_goal = relationship('CategoryGoalSnap', backref = 'goaltypesnap')
 
@@ -266,6 +282,7 @@ class MonthlyBudgetSnap(Base):
     budgeted_amount = Column(Numeric)
     activity_amount = Column(Numeric)
     balance_amount = Column(Numeric)
+    monthly_budget_snap_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
         return "<(monthly_budget='%s')" % (self.monthly_budget_snap_key)
@@ -282,6 +299,7 @@ class TransactionSnap(Base):
     category_snap_key = Column(Integer, ForeignKey('dim_category_snap.category_snap_key'))
     date_key = Column(Integer, ForeignKey('dim_date.date_key'))
     transaction_amount = Column(Numeric)
+    transaction_snap_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
         return "<(transaction='%s')" % (self.transaction_id)
@@ -298,6 +316,7 @@ class CategoryGoalSnap(Base):
     goal_type_snap_key = Column(Integer, ForeignKey('dim_goal_type_snap.goal_type_snap_key'))
     goal_target_amount = Column(Numeric)
     goal_percentage_complete = Column(Numeric)
+    category_goal_snap_insert_datetime = Column(DateTime(timezone=True), server_default=func.now())
 
     goal_creation_month = relationship("Month", foreign_keys=[goal_creation_month_key])
     goal_target_month = relationship("Month", foreign_keys=[goal_target_month_key])
