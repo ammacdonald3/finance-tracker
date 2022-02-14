@@ -8,6 +8,7 @@ from scripts.dim_payee import dim_payee_load
 from scripts.fact_category_goal import fact_category_goal_load
 from scripts.fact_monthly_budget import fact_monthly_budget_load
 from scripts.fact_transaction import fact_transaction_load
+from scripts.delete_fact_table_data import delete_fact_table_data
 
 
 def main(request):
@@ -16,6 +17,7 @@ def main(request):
     # create_schema_function()
     # dim_month_load()
     # dim_date_load()
+    delete_fact_table_data()
     dim_account_load()
     dim_category_load()
     dim_goal_type_load()
